@@ -3,9 +3,7 @@
   become: True
   tasks:
     - name: Install packages
-      apt:
-        name: "httpd"
-        state: "present"
+      apt: name=apache2 update_cache=yes state=latest
     - name: Start Apache server
       service:
         name: httpd
