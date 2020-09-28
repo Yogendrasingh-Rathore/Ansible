@@ -6,8 +6,8 @@
       apt: name=apache2 update_cache=yes state=latest
     - name: Start Apache server
       service:
-        name: httpd
-        state: started
+        name: apache2
+        state: restarted
         enabled: True
     - name: Deploy static website
       copy:
