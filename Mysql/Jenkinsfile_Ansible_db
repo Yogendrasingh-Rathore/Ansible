@@ -5,15 +5,16 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 // Get some code from a GitHub repository
-                git 'https://github.com/Yogendrasingh-Rathore/Ansible/tree/master/Mysql'
+                git 'https://github.com/Yogendrasingh-Rathore/Ansible.git'
 
             }
         }
         
         stage('Execute Ansible') {
             steps {
-                ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'hosts', playbook: 'db_playbook.yml'
-
+                dir('Mysql'){
+                    ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'hosts', playbook: 'db_playbook.yml'
+                }
             }
         }
         
