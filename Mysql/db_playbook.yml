@@ -40,9 +40,9 @@
       notify:
        - Restart mysql
 
-handlers:
- - name: Restart mysql
-   service:
-      name: mysql
-      state: restarted
-      enabled: yes
+  handlers:
+   - name: Restart mysql
+     service:
+        name: mysql
+        state: restarted
+        enabled: yes
