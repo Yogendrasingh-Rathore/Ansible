@@ -1,5 +1,5 @@
 ---
-  name: Setup Mysql db and remote login
+- name: Setup Mysql db and remote login
   hosts: dbgrp
   tasks:
     - name: Installing Mysql Service and Dependencies
