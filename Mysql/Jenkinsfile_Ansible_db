@@ -13,7 +13,7 @@ pipeline {
         stage('Execute Ansible') {
             steps {
                 dir('Mysql'){
-                    ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'hosts', playbook: 'db_playbook.yml'
+                    ansiblePlaybook credentialsId: 'ec2_user_Ansible', disableHostKeyChecking: true, installation: 'Ansible2', inventory: 'hosts', playbook: 'db_playbook.yml'
                 }
             }
         }
