@@ -7,10 +7,10 @@
   
     - name: Creating set of EC2 Instances
       ec2:
-        group: sg-084eb47eea13c0020
+        group: Ansible-sg
         instance_type: t2.micro
         image: ami-03f0fd1a2ba530e75
-        region: us-east-1
+        region: ap-south-1
         wait: true
         exact_count: 1
         count_tag:
@@ -19,5 +19,5 @@
           Name: Demo
       register: ec2_info
         
-  - debug:
-      msg: "{{ec2_info}}"
+    - debug:
+        msg: "{{ec2_info}}"
