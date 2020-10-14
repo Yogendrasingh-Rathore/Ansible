@@ -20,3 +20,31 @@
         dest: "./login_key.pem"
         mode: 0600
       when: ec2_key_info.changed
+      
+    - name: Create Security Group for ec2 Instance
+      ec2_group:
+        name: ec2-sg
+        description: Allow port 22, 8080 and 3306
+        region: "{{region}}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+            
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: "{{myip}}"            
+          
+          - proto: tcp
+            from_port: 8080
+            to_port: 8080
+            cidr_ip: "{{myip}}"
+
+          - proto: tcp
+            from_port: 3306
+            to_port: 3306
+            cidr_ip: "{{myip}}"
+            
+        register: ec2_sg_info
