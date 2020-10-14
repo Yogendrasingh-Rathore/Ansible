@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+    - vars/ec2vars
+  
+  tasks:  
+    - name: Create ec2 key-pair
+      ec2_key:
+        name: ec2-key
+        region: "{{region}}"
+      register: ec2_key_info
+      
+    - debug:
+        msg: "{{ec2_key_info}}"
+        
+    - copy:
+        content: "{{ec2_key_info.key.private_key}}"
+        dest: "./login_key.pem"
+        mode: 0600
+      when: ec2_key_info.changed
