@@ -12,10 +12,11 @@
         region: "{{region}}"
       register: ec2_key_info
       
-    - debug:
-        msg: "{{ec2_key_info}}"
+#    - debug:
+#        msg: "{{ec2_key_info}}"
         
-    - copy:
+    - name: Copy the private key
+      copy:
         content: "{{ec2_key_info.key.private_key}}"
         dest: "./login_key.pem"
         mode: 0600
