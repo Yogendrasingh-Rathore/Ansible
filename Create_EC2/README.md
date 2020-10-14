@@ -20,5 +20,10 @@ We create EC2 Instances with the help of Ansible playbook i.e. ec2_play.yml
 
 # Note:
 
-Here, we are assigning a Role to our ec2 instance(Ansible) Master that has a policy attached "AdministratorAccess",
-so that this ec2 can log-in to the AWS, as we are not using the key parameter here for security reasons.
+    1. Here, we are assigning a Role to our ec2 instance(Ansible) Master that has a policy attached "AdministratorAccess",
+       so that this ec2 can log-in to the AWS, as we are not using the key parameter here for security reasons.
+    2. The EC2 model has following dependencies:
+        1. boto
+        2. boto3
+        3. python >= 2.3
+        This dependencies must be installed in the server instance i.e. Ansible machine.
