@@ -48,4 +48,4 @@
             to_port: 3306
             cidr_ip: "{{myip}}"
             
-        register: ec2_sg_info
+      register: ec2_sg_info
