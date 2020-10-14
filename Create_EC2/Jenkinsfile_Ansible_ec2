@@ -12,7 +12,7 @@ pipeline {
         
         stage('Execute Ansible') {
             steps {
-                dir('Mysql'){
+                dir('Create_EC2'){
                     ansiblePlaybook credentialsId: 'ec2_user_Ansible', disableHostKeyChecking: true, installation: 'Ansible2', inventory: 'hosts', playbook: 'db_playbook.yml'
                 }
             }
