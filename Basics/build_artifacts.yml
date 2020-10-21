@@ -27,5 +27,5 @@ tasks:
     when: git_status.changed
     register: mvn_info
     
-  - debug:
-      msg: "{{mvn_info}}"
+#  - debug:
+#      msg: "{{mvn_info}}"
