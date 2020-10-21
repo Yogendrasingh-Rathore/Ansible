@@ -1,0 +1,31 @@
+name: Generate artifacts, copy artifacts
+hosts: localhost
+connection: local
+become: yes
+tasks:
+  - name: Install jdk, maven & git
+    apt:
+      name: "{{item}}"
+      state: present
+      update_cache: yes
+    loop:
+      - git
+      - openjdk-8-jdk
+      - maven
+      
+  - name: Clone source code from github
+    git:
+      repo: 'https://github.com/Yogendrasingh-Rathore/simple-java-maven-app.git'
+      dest: ./mvn-repo
+      version: master
+    register: git_status
+    
+  - name: mvn install cmd to build artifacts
+    command: "mvn install"
+    args:
+      chdir: mvn-repo
+    when: git_status.changed
+    register: mvn_info
+    
+  - debug:
+      msg: "{{mvn_info}}"
