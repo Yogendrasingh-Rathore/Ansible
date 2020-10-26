@@ -1,0 +1,16 @@
+---
+- name: Install Memcache
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Install Memcache
+      apt:
+        name: memcached
+        state: present
+        update_cache: yes
+        
+    - name: Start & Enable Memcache
+      service:
+        name: memcached
+        state: started
+    
