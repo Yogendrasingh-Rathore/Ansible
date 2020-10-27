@@ -1,0 +1,23 @@
+---
+- name: Install & Setup RabbitMQ with user
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Install Erlang Repo Package
+      apt:
+        deb: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+        
+    - name: Add an Erlang solution public key
+      apt_key:
+        url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+        state: present
+        
+    - name: Install Erlang
+      apt:
+        name: erlang
+        update_cache: yes
+        state: present
+        
+    - apt_repository:
+        repo: deb https://d1.bintray.com/rabbitmq/debian xenial main
+        state: present
