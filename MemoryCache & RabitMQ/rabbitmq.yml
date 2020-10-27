@@ -19,5 +19,5 @@
         state: present
         
     - apt_repository:
-        repo: deb https://d1.bintray.com/rabbitmq/debian xenial main
+        repo: deb http://binaries.erlang-solutions.com/debian disco contrib
         state: present
