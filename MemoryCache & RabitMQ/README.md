@@ -9,4 +9,4 @@ To install RabbitMQ follow these steps:
 
 
 
-Note: For adding a repo using ansible we make use of ##deb package in apt module
+Note: For adding a repo using ansible we make use of #deb package in apt module
