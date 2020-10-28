@@ -1,78 +1,79 @@
 ---
-- name: Install & Setup RabbitMQ with user
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: Install Erlang Repo Package
-      apt:
-        deb: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-        
-    - name: Add an Erlang solution public key
-      apt_key:
-        url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
-        state: present
-        
-    - name: Install Erlang
-      apt:
-        name: erlang
-        update_cache: yes
-        state: present
-        
-    - apt_repository:
-        repo: deb http://binaries.erlang-solutions.com/debian disco contrib
-        state: present
-        
-    - name: Add RabbitMQ Public key
-      apt_key:
-        url: https://www.rabitmq.com/rabbitmq-release-signing-key.asc
-        state: present
-        
-    - apt_key:
-        url: https://dl.bintary.com/rabitmq/keys/rabbitmq-release-signing-key.asc
-        state: present
-        
-    - name: Install Rabbit MQ
-      apt:
-        name: rabbitmq-server
-        state: present
-        update_cache: yes
-   
-    - name: Restart RMQ
-      service:
-        name: rabbitmq-server
-        state: started        
-        
-    - name: Config Setup
-      copy:
-        content: |
-          [{rabbit, [{loopback_users, []}}].
-        dest: /etc/rabbitmq/rabbitmq.config
-      notify:
-        - Restart RMQ
-        
-    - rabbitmq_user:
-        user: admin
-        password: admin@123
-        vhost: /
-        configure_priv: .*
-        read_priv: .*
-        write_priv: .*
-        tags: administrator
-        state: present
-      notify:
-        - Restart RMQ
-        
-    - name: Enables the rabbitmq_management plugin
-      rabbitmq_plugin:
-        name: rabbitmq_management
-        state: enabled
-      notify:
-        - Restart RMQ
-        
-  handlers:
-    - name: Restart RMQ
-      service:
-        name: rabbitmq-server
-        state: restarted
-        
-        
+    - name: Install & Setup RabbitMQ with user
+      hosts: localhost
+      connection: local
+      become: yes
+      become_method: sudo
+      tasks:
+        - name: Install Erlang Repo Package
+          apt:
+            deb: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+            
+        - name: Add an Erlang solution public key
+          apt_key:
+            url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+            state: present
+            
+        - name: Install Erlang
+          apt:
+            name: erlang
+            update_cache: yes
+            state: present
+            
+        - apt_repository:
+            repo: deb http://binaries.erlang-solutions.com/debian disco contrib
+            state: present
+            
+        - name: Add RabbitMQ Public key
+          apt_key:
+            url: https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
+            state: present
+            
+        - apt_key:
+            url: https://dl.bintray.com/rabbitmq/keys/rabbitmq-release-signing-key.asc
+            state: present
+            
+        - name: Install Rabbit MQ
+          apt:
+            name: rabbitmq-server
+            state: present
+            update_cache: yes
+       
+        - name: Start and Enable RMQ
+          service:
+            name: rabbitmq-server
+            state: started
+            enabled: yes        
+            
+        - name: Config Setup
+          copy:
+            content: |
+              [{rabbit, [{loopback_users, []}}].
+            dest: /etc/rabbitmq/rabbitmq.config
+          notify:
+            - Restart RMQ
+            
+        - rabbitmq_user:
+            user: admin
+            password: admin@123
+            vhost: /
+            configure_priv: .*
+            read_priv: .*
+            write_priv: .*
+            tags: administrator
+            state: present
+          notify:
+            - Restart RMQ
+            
+        - name: Enables the rabbitmq_management plugin
+          rabbitmq_plugin:
+            name: rabbitmq_management
+            state: enabled
+          notify:
+            - Restart RMQ
+            
+      handlers:
+        - name: Restart RMQ
+          service:
+            name: rabbitmq-server
+            state: restarted    
