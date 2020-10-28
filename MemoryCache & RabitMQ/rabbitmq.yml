@@ -21,3 +21,58 @@
     - apt_repository:
         repo: deb http://binaries.erlang-solutions.com/debian disco contrib
         state: present
+        
+    - name: Add RabbitMQ Public key
+      apt_key:
+        url: https://www.rabitmq.com/rabbitmq-release-signing-key.asc
+        state: present
+        
+    - apt_key:
+        url: https://dl.bintary.com/rabitmq/keys/rabbitmq-release-signing-key.asc
+        state: present
+        
+    - name: Install Rabbit MQ
+      apt:
+        name: rabbitmq-server
+        state: present
+        update_cache: yes
+   
+    - name: Restart RMQ
+      service:
+        name: rabbitmq-server
+        state: started        
+        
+    - name: Config Setup
+      copy:
+        content: |
+          [{rabbit, [{loopback_users, []}}].
+        dest: /etc/rabbitmq/rabbitmq.config
+      notify:
+        - Restart RMQ
+        
+    - rabbitmq_user:
+        user: admin
+        password: admin@123
+        vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        tags: administrator
+        state: present
+      notify:
+        - Restart RMQ
+        
+    - name: Enables the rabbitmq_management plugin
+      rabbitmq_plugin:
+        name: rabbitmq_management
+        state: enabled
+      notify:
+        - Restart RMQ
+        
+  handlers:
+    - name: Restart RMQ
+      service:
+        name: rabbitmq-server
+        state: restarted
+        
+        
