@@ -1,0 +1,50 @@
+---
+- name: Setup Tomcat & Deploy Artifact
+  hosts: localhost
+  connection: local
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install Tomcat 8 & dependencies
+      package:
+        name: "{{item}}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - tomcat8
+        - tomcat8-admin
+        - tomcat8-docs
+        - tomcat8-common
+        
+    - name: Start & Enable tomcat SVC
+      service:
+        name: tomcat8
+        state: started
+        enabled: yes
+        
+    - name: Deploy vprofile artifact
+      copy:
+        src: files/vprofile-v3.war
+        dest: /var/lib/tomcat8/webapps/ROOT.war
+      register: deploy_info
+
+    
+    - name: Restart Tomcat svc
+      service:
+        name: tomcat8
+        state: restarted
+      when: deploy_info.changed
+        
+    - name: Deploy web configuration file
+      template:
+        src: templates/application.j2
+        dest: /var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
+        force: yes
+      notify:
+        - Restart Tomcat
+        
+  handlers:
+    - name: Restart Tomcat
+      service:
+        name: tomcat8
+        state: restarted
