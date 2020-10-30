@@ -4,6 +4,8 @@
   connection: local
   become: yes
   become_method: sudo
+  vars:
+    timestamp: "{{ansible_date_time.date}}_{{ansible_date_time.hour}}_{{ansible_date_time.minute}}"
   tasks:
     - name: Install Tomcat 8 & dependencies
       package:
@@ -21,6 +23,23 @@
         name: tomcat8
         state: started
         enabled: yes
+        
+    - stat:
+        path: /var/lib/tomcat8/webapps/ROOT
+      register: artifact_stat
+      
+    - name: Archive ROOT dir with timestamp
+      archive:
+        path: /var/lib/tomcat8/webapps/ROOT
+        dest: "/opt/ROOT_{{timestamp}}.tgz"
+      when: artifact_stat.stat.exists
+      register: archive_info
+      
+    - name: Delete current artifact
+      file:
+        path: /var/lib/tomcat8/webapps/ROOT
+        state: absent
+      when: archive_info.changed
         
     - name: Deploy vprofile artifact
       copy:
