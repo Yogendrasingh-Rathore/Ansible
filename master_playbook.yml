@@ -1,0 +1,7 @@
+---
+- name: Creating Master Playbook to run all the playbooks in an order
+  import_playbook: appache.yml
+  import_playbook: ./Nginx/web_loadbalancer.yml
+  import_playbook: ./tomcat/tomcat.yml
+  import_playbook: ./MemoryCache & RabitMQ/memcache.yml
+  import_playbook: ./MemoryCache & RabitMQ/rabbitmq.yml
